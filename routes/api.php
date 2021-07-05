@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +18,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+//Routes for demoApi
+Route::apiresource('/products', ProductController::class);
+Route::prefix('products')->group(function () {
+    Route::apiresource('/{product}/reviews', ReviewController::class);
 });
