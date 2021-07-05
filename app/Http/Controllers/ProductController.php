@@ -94,7 +94,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        if($request->description){
+        $request['detail'] =$request->description; //in our model no description field is available
+        unset($request['description']);
+                }
+        $product->update($request->all());
+        return response([
+            'data' => 'Updated Successfully'
+    ],Response::HTTP_CREATED);
     }
 
     /**
