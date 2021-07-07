@@ -24,7 +24,7 @@ trait ExceptionTrait{
         }
 
          //if exception is other ModelNotFound or NotFoundHttp
-        return parent::render($request, $exception);
+    return parent::render($request, $exception);
     }
 
     public function isModel($exception)
