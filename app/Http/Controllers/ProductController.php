@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductCollection;
+use App\Exceptions\ProductNotBelongsToUser;
 use Symfony\Component\HttpFoundation\Response;
+use Auth;
 
 class ProductController extends Controller
 {
@@ -94,13 +96,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $this->productUser($product);
         if($request->description){
         $request['detail'] =$request->description; //in our model no description field is available
         unset($request['description']);
                 }
         $product->update($request->all());
         return response([
-            'data' => 'Updated Successfully'
+            'data' => new ProductResource($product)
     ],Response::HTTP_CREATED);
     }
 
@@ -114,5 +117,13 @@ class ProductController extends Controller
     {
         $product->delete();
         return response(null,Response::HTTP_NO_CONTENT);
+    }
+
+    public function productUser($product)
+    {
+        if (Auth::id() !== $product->user_id) {
+            throw new ProductNotBelongsToUser;
+            
+        }
     }
 }
